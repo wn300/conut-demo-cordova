@@ -1,0 +1,17 @@
+body{
+    background-color: rgb(241, 241, 241) !important
+}
+    
+.nav-link, .btn{
+    cursor: pointer !important
+}
+
+.bg-conten{
+    border-radius: 2px;
+    padding: 14px 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);    
+    transition:all .5s ease-in-out;
+    background-color: #FFFFFF
+}
+    
