@@ -3,6 +3,9 @@ import { Pesos, Planilla, PesosSumas } from './modelos/basculas';
 
 import * as jsPDF from 'jspdf';
 import { debug } from 'util';
+
+declare var cordova
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -66,6 +69,9 @@ export class AppComponent {
   public nivel_dos: number;
 
   constructor() {
+    document.addEventListener('deviceready', function () {
+      // cordova.plugins.printer is now available
+    }, false);
     //1
     if (JSON.parse(localStorage.getItem("PlanillaUno")) !== null && JSON.parse(localStorage.getItem("PlanillaUno")) !== 'null') {
       this.objetoPlanilla = JSON.parse(localStorage.getItem("PlanillaUno"));
@@ -133,30 +139,21 @@ export class AppComponent {
       && this.temperatura_uno !== ''
       && this.cliente_uno !== ''
       && this.fecha_uno !== ''
-      && this.hora_uno !== ''
       && this.lugar_uno !== ''
       && this.temperatura_vehiculo_uno !== ''
       && this.consecutivo_uno !== null) {
 
       if (this.objetoPlanilla.length === 0 && !this.rango_for_uno) {
         this.objetoPlanilla.push({
-
-
           consecutivo: this.consecutivo_uno,
           fecha: this.fecha_uno,
-          hora: this.hora_uno,
           lugar: this.lugar_uno,
           temperatura_vehiculo: this.temperatura_vehiculo_uno,
-
-
-
           conductor: this.conductor_uno,
           vehiculo: this.vehiculo_uno,
           temperatura: this.temperatura_uno,
           cliente: this.cliente_uno,
-
           observaciones: this.observacions_uno,
-
           pesos: []
         })
       }
@@ -166,22 +163,15 @@ export class AppComponent {
       if (this.objetoPlanilla[0].pesos.length === 0) {
         this.objetoPlanilla = [];
         this.objetoPlanilla.push({
-
           consecutivo: this.consecutivo_uno,
           fecha: this.fecha_uno,
-          hora: this.hora_uno,
           lugar: this.lugar_uno,
           temperatura_vehiculo: this.temperatura_vehiculo_uno,
-
-
-
           conductor: this.conductor_uno,
           vehiculo: this.vehiculo_uno,
           temperatura: this.temperatura_uno,
           cliente: this.cliente_uno,
-
           observaciones: this.observacions_uno,
-
           pesos: []
         })
       }
@@ -194,6 +184,14 @@ export class AppComponent {
       localStorage.setItem("PlanillaUno", null);
     }
   }
+
+  horaUno(){
+    if(this.objetoPlanilla.length > 0){
+      localStorage.setItem("PlanillaUno", null);
+      this.objetoPlanilla[0].hora = this.hora_uno;
+      localStorage.setItem("PlanillaUno", JSON.stringify(this.objetoPlanilla));
+    }
+  }
   //2
   validacionEncabezadoDos() {
     if (this.conductor_dos !== ''
@@ -201,7 +199,6 @@ export class AppComponent {
       && this.temperatura_dos !== ''
       && this.cliente_dos !== ''
       && this.fecha_dos !== ''
-      && this.hora_dos !== ''
       && this.lugar_dos !== ''
       && this.temperatura_vehiculo_dos !== ''
       && this.consecutivo_dos !== null) {
@@ -212,7 +209,6 @@ export class AppComponent {
 
           consecutivo: this.consecutivo_dos,
           fecha: this.fecha_dos,
-          hora: this.hora_dos,
           lugar: this.lugar_dos,
           temperatura_vehiculo: this.temperatura_vehiculo_dos,
 
@@ -238,7 +234,6 @@ export class AppComponent {
 
           consecutivo: this.consecutivo_dos,
           fecha: this.fecha_dos,
-          hora: this.hora_dos,
           lugar: this.lugar_dos,
           temperatura_vehiculo: this.temperatura_vehiculo_dos,
 
@@ -262,6 +257,15 @@ export class AppComponent {
       localStorage.setItem("PlanillaDos", null);
     }
   }
+
+  horaDos(){
+    if(this.objetoPlanilla.length > 0){
+      localStorage.setItem("PlanillaDos", null);
+      this.objetoPlanillaDos[0].hora = this.hora_dos;
+      localStorage.setItem("PlanillaDos", JSON.stringify(this.objetoPlanillaDos));
+    }
+  }
+
   //1
   validacionDetallesUno() {
     if (this.producto_uno !== ''
@@ -378,50 +382,50 @@ export class AppComponent {
         }
         case "A Granel": {
           tamaño = 1;
-          if(this.producto_uno === 'Menudencia Completa'){
+          if (this.producto_uno === 'Menudencia Completa') {
             this.nivel_uno = 20
           }
-          if(this.producto_uno === 'Menudencia Incompleta'){
+          if (this.producto_uno === 'Menudencia Incompleta') {
             this.nivel_uno = 21
           }
-          if(this.producto_uno === 'Higados'){
+          if (this.producto_uno === 'Higados') {
             this.nivel_uno = 22
           }
-          if(this.producto_uno === 'Patas'){
+          if (this.producto_uno === 'Patas') {
             this.nivel_uno = 23
           }
-          if(this.producto_uno === 'Pescuezos'){
+          if (this.producto_uno === 'Pescuezos') {
             this.nivel_uno = 24
           }
-          if(this.producto_uno === 'Corazones'){
+          if (this.producto_uno === 'Corazones') {
             this.nivel_uno = 25
           }
-          if(this.producto_uno === 'Mollejas'){
+          if (this.producto_uno === 'Mollejas') {
             this.nivel_uno = 26
-          }          
+          }
           break;
         }
         case "Paquete": {
           tamaño = 100;
-          if(this.producto_uno === 'Menudencia Completa'){
+          if (this.producto_uno === 'Menudencia Completa') {
             this.nivel_uno = 27
           }
-          if(this.producto_uno === 'Menudencia Incompleta'){
+          if (this.producto_uno === 'Menudencia Incompleta') {
             this.nivel_uno = 28
           }
-          if(this.producto_uno === 'Higados'){
+          if (this.producto_uno === 'Higados') {
             this.nivel_uno = 29
           }
-          if(this.producto_uno === 'Patas'){
+          if (this.producto_uno === 'Patas') {
             this.nivel_uno = 30
           }
-          if(this.producto_uno === 'Pescuezos'){
+          if (this.producto_uno === 'Pescuezos') {
             this.nivel_uno = 31
           }
-          if(this.producto_uno === 'Corazones'){
+          if (this.producto_uno === 'Corazones') {
             this.nivel_uno = 32
           }
-          if(this.producto_uno === 'Mollejas'){
+          if (this.producto_uno === 'Mollejas') {
             this.nivel_uno = 33
           }
           break;
@@ -586,50 +590,50 @@ export class AppComponent {
         }
         case "A Granel": {
           tamaño = 1;
-          if(this.producto_dos === 'Menudencia Completa'){
+          if (this.producto_dos === 'Menudencia Completa') {
             this.nivel_dos = 20
           }
-          if(this.producto_dos === 'Menudencia Incompleta'){
+          if (this.producto_dos === 'Menudencia Incompleta') {
             this.nivel_dos = 21
           }
-          if(this.producto_dos === 'Higados'){
+          if (this.producto_dos === 'Higados') {
             this.nivel_dos = 22
           }
-          if(this.producto_dos === 'Patas'){
+          if (this.producto_dos === 'Patas') {
             this.nivel_dos = 23
           }
-          if(this.producto_dos === 'Pescuezos'){
+          if (this.producto_dos === 'Pescuezos') {
             this.nivel_dos = 24
           }
-          if(this.producto_dos === 'Corazones'){
+          if (this.producto_dos === 'Corazones') {
             this.nivel_dos = 25
           }
-          if(this.producto_dos === 'Mollejas'){
+          if (this.producto_dos === 'Mollejas') {
             this.nivel_dos = 26
-          }          
+          }
           break;
         }
         case "Paquete": {
           tamaño = 100;
-          if(this.producto_dos === 'Menudencia Completa'){
+          if (this.producto_dos === 'Menudencia Completa') {
             this.nivel_dos = 27
           }
-          if(this.producto_dos === 'Menudencia Incompleta'){
+          if (this.producto_dos === 'Menudencia Incompleta') {
             this.nivel_dos = 28
           }
-          if(this.producto_dos === 'Higados'){
+          if (this.producto_dos === 'Higados') {
             this.nivel_dos = 29
           }
-          if(this.producto_dos === 'Patas'){
+          if (this.producto_dos === 'Patas') {
             this.nivel_dos = 30
           }
-          if(this.producto_dos === 'Pescuezos'){
+          if (this.producto_dos === 'Pescuezos') {
             this.nivel_dos = 31
           }
-          if(this.producto_dos === 'Corazones'){
+          if (this.producto_dos === 'Corazones') {
             this.nivel_dos = 32
           }
-          if(this.producto_dos === 'Mollejas'){
+          if (this.producto_dos === 'Mollejas') {
             this.nivel_dos = 33
           }
           break;
@@ -723,6 +727,8 @@ export class AppComponent {
       this.disabled_uno = false;
       this.rango_for_uno = false;
       this.total_uno = 0;
+
+      this.observacions_uno = '';
     }
   }
   //1
@@ -747,6 +753,8 @@ export class AppComponent {
       this.rango_for_dos = false;
 
       this.total_dos = 0;
+
+      this.observacions_dos = '';
     }
   }
 
@@ -959,8 +967,8 @@ export class AppComponent {
     });
 
     this.print = true;
-    
-     
+
+
     // let pdf = new jsPDF('v', 'pt', 'A4');
     // let options = {
     //   pagesplit: true
@@ -968,9 +976,15 @@ export class AppComponent {
     setTimeout(() => {
       // pdf.addHTML(this.el.nativeElement, 50, 50, options, () => {
       //   pdf.save(this.cliente_uno + Date.now() + ".pdf");       
-        window.print();
-        this.print = false;
+      //window.print();
+      let html = "<html><body><table style='border-collapse: collapse;'>" + document.getElementById('divPrintPDFOne').innerHTML + "</table></body></html>"
+      cordova.plugins.printer.print(html, { duplex: 'long' }, function (res) {
+      });
       // });
+    }, 500);
+
+    setTimeout(() => {
+      this.print = false;
     }, 1000);
   }
 
@@ -1129,10 +1143,16 @@ export class AppComponent {
     // };
     setTimeout(() => {
       // pdf.addHTML(this.el.nativeElement, 50, 50, options, () => {
-      //   pdf.save(this.cliente_dos + Date.now() + ".pdf");
-      window.print();
-      this.print = false;
+      //   pdf.save(this.cliente_uno + Date.now() + ".pdf");       
+      //window.print();
+      let html = "<html><body><table style='border-collapse: collapse;'>" + document.getElementById('divPrintPDFTwo').innerHTML.toString() + "</table></body></html>"
+      cordova.plugins.printer.print(html, { duplex: 'long' }, function (res) {
+      });
       // });
+    }, 500);
+
+    setTimeout(() => {
+      this.print = false;
     }, 1000);
   }
 

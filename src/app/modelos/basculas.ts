@@ -1,7 +1,7 @@
 export interface Planilla {
     consecutivo: number,
     fecha: string,
-    hora: string,
+    hora?: string,
     lugar: string,
     temperatura_vehiculo: string,
     conductor: string,

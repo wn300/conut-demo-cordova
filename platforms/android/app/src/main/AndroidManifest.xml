@@ -9,6 +9,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:exported="false" android:label="Printer" android:name="de.appplant.cordova.plugin.printer.ui.SelectPrinterActivity" />
     </application>
     <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="26" />
 </manifest>

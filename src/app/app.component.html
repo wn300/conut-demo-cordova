@@ -29,7 +29,7 @@
   <div>
     <div #pdf style="background-color: #FFFFFF; border:none" class="row">
       <div *ngIf="bascula_uno">
-        <table *ngIf="objetoPlanilla">
+        <table id="divPrintPDFOne" *ngIf="objetoPlanilla">
           <tr>
             <td rowspan="3" colspan="1" style="border: 1px solid black; color:black; text-align: center">
               <b>
@@ -260,7 +260,7 @@
         </table>
       </div>
       <div *ngIf="!bascula_uno">
-        <table *ngIf="objetoPlanilla">
+        <table id="divPrintPDFTwo" *ngIf="objetoPlanilla">
           <tr>
             <td rowspan="3" colspan="1" style="border: 1px solid black; color:black; text-align: center">
               <b>
@@ -528,7 +528,7 @@
             <div class="form-group row">
               <label class="col-md-6 col-3">Hora Salida:</label>
               <div class="col-md-6 col-9">
-                <input type="time" class="form-control form-control-sm" [(ngModel)]="hora_uno" [disabled]="disabled_uno" (blur)="validacionEncabezadoUno()"
+                <input type="time" class="form-control form-control-sm" [(ngModel)]="hora_uno" (blur)="horaUno()"
                 />
               </div>
             </div>
@@ -768,7 +768,7 @@
             <div class="form-group row">
               <label class="col-md-6 col-3">Hora Salida:</label>
               <div class="col-md-6 col-9">
-                <input type="time" class="form-control form-control-sm" [(ngModel)]="hora_dos" [disabled]="disabled_dos" (blur)="validacionEncabezadoDos()"
+                <input type="time" class="form-control form-control-sm" [(ngModel)]="hora_dos" (blur)="horaDos()"
                 />
               </div>
             </div>
