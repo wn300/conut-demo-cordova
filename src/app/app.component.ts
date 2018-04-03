@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Pesos, Planilla, PesosSumas } from './modelos/basculas';
+import { Pesos, Planilla, PesosSumas, Totales } from './modelos/basculas';
 
 import * as jsPDF from 'jspdf';
 import { debug } from 'util';
@@ -17,6 +17,8 @@ export class AppComponent {
 
   //1  
   public objetoPlanillaPDF: PesosSumas[] = [];
+  public objetoPlanillaPDFPollo: PesosSumas[] = [];
+  public objetoPlanillaPDFMenudencias: PesosSumas[] = [];
   public rango_for_uno: boolean = false;
   public disabled_uno: boolean = false;
   public id_uno: number = 0;
@@ -41,8 +43,21 @@ export class AppComponent {
   public canasta_uno: number = null;
   public negativo_uno: number = null;
   public nivel_uno: number;
+
+  public totCantUnoPollo: number = 0;
+  public totPesoUnoPollo: number = 0;
+  public totPesoPromedioUnoPollo: number = 0;
+  public totCanastasUnoPollo: number = 0;
+
+  public totPesoUnoPolloMenudencias: number = 0;
+  public totCanastasUnoPolloMenudencias: number = 0;
+
+  public totalesUno: Totales[] = [];
+
   //2
   public objetoPlanillaDosPDF: PesosSumas[] = [];
+  public objetoPlanillaPDFDosPollo: PesosSumas[] = [];
+  public objetoPlanillaPDFDosMenudencias: PesosSumas[] = [];
   public rango_for_dos: boolean = false;
   public disabled_dos: boolean = false;
   public id_dos: number = 0;
@@ -68,9 +83,18 @@ export class AppComponent {
   public negativo_dos: number = null;
   public nivel_dos: number;
 
+  public totCantDosPollo: number = 0;
+  public totPesoDosPollo: number = 0;
+  public totPesoPromedioDosPollo: number = 0;
+  public totCanastasDosPollo: number = 0;
+
+  public totPesoDosPolloMenudencias: number = 0;
+  public totCanastasDosPolloMenudencias: number = 0;
+
+  public totalesDos: Totales[] = [];
+
   constructor() {
     document.addEventListener('deviceready', function () {
-      // cordova.plugins.printer is now available
     }, false);
     //1
     if (JSON.parse(localStorage.getItem("PlanillaUno")) !== null && JSON.parse(localStorage.getItem("PlanillaUno")) !== 'null') {
@@ -90,11 +114,9 @@ export class AppComponent {
         this.observacions_uno = this.objetoPlanilla[0].observaciones;
       }
     }
-
     if (localStorage.getItem("TotalUno") !== null && localStorage.getItem("TotalUno") !== 'null') {
       this.total_uno = parseFloat(localStorage.getItem("TotalUno"));
     }
-
     //2
     if (JSON.parse(localStorage.getItem("PlanillaDos")) !== null && JSON.parse(localStorage.getItem("PlanillaDos")) !== 'null') {
       this.objetoPlanillaDos = JSON.parse(localStorage.getItem("PlanillaDos"));
@@ -118,17 +140,13 @@ export class AppComponent {
         this.observacions_dos = this.objetoPlanillaDos[0].observaciones;
       }
     }
-
     if (localStorage.getItem("TotalDos") !== null && localStorage.getItem("TotalDos") !== 'null') {
       this.total_dos = parseFloat(localStorage.getItem("TotalDos"));
     }
-
   }
-
   bascularUno() {
     this.bascula_uno = true;
   }
-
   bascularDos() {
     this.bascula_uno = false;
   }
@@ -184,9 +202,8 @@ export class AppComponent {
       localStorage.setItem("PlanillaUno", null);
     }
   }
-
-  horaUno(){
-    if(this.objetoPlanilla.length > 0){
+  horaUno() {
+    if (this.objetoPlanilla.length > 0) {
       localStorage.setItem("PlanillaUno", null);
       this.objetoPlanilla[0].hora = this.hora_uno;
       localStorage.setItem("PlanillaUno", JSON.stringify(this.objetoPlanilla));
@@ -257,15 +274,13 @@ export class AppComponent {
       localStorage.setItem("PlanillaDos", null);
     }
   }
-
-  horaDos(){
-    if(this.objetoPlanilla.length > 0){
+  horaDos() {
+    if (this.objetoPlanilla.length > 0) {
       localStorage.setItem("PlanillaDos", null);
       this.objetoPlanillaDos[0].hora = this.hora_dos;
       localStorage.setItem("PlanillaDos", JSON.stringify(this.objetoPlanillaDos));
     }
   }
-
   //1
   validacionDetallesUno() {
     if (this.producto_uno !== ''
@@ -439,6 +454,12 @@ export class AppComponent {
 
       this.cantidad_uno = (this.canasta_uno * tamaño) - this.negativo_uno;
       this.peso_promedio_uno = this.cantidad_uno / this.peso_uno;
+
+      let ids: Array<number> = [];
+      this.objetoPlanilla[0].pesos.forEach((element) => {
+        ids.push(element.id)
+      })
+      this.id_uno = Math.max.apply(null,ids)
 
       this.objetoPlanilla[0].pesos.push({
         id: this.id_uno + 1,
@@ -648,6 +669,12 @@ export class AppComponent {
       this.cantidad_dos = (this.canasta_dos * tamaño) - this.negativo_dos;
       this.peso_promedio_dos = this.cantidad_dos / this.peso_dos;
 
+      let ids: Array<number> = [];
+      this.objetoPlanillaDos[0].pesos.forEach((element) => {
+        ids.push(element.id)
+      })
+      this.id_dos = Math.max.apply(null,ids)
+
       this.objetoPlanillaDos[0].pesos.push({
         id: this.id_dos + 1,
         producto: this.producto_dos,
@@ -687,8 +714,6 @@ export class AppComponent {
     this.total_uno -= (planilla.peso + (planilla.canasta * 2));
     this.objetoPlanilla[0].pesos.splice(this.objetoPlanilla[0].pesos.findIndex(peso => peso.id === planilla.id), 1);
 
-    // this.disabled_uno = false;
-
     localStorage.setItem("PlanillaUno", null);
     localStorage.setItem("PlanillaUno", JSON.stringify(this.objetoPlanilla));
     localStorage.setItem("TotalUno", null);
@@ -696,9 +721,9 @@ export class AppComponent {
   }
   //2
   eliminarPesoDos(planilla: Pesos) {
+    debugger
     this.total_dos -= (planilla.peso + (planilla.canasta * 2));
     this.objetoPlanillaDos[0].pesos.splice(this.objetoPlanillaDos[0].pesos.findIndex(peso => peso.id === planilla.id), 1);
-    // this.disabled_dos = false;
 
     localStorage.setItem("PlanillaDos", null);
     localStorage.setItem("PlanillaDos", JSON.stringify(this.objetoPlanillaDos));
@@ -710,16 +735,12 @@ export class AppComponent {
     if (confirm('Si limpia los datos perdera todo el progreso que lleve hasta el momento ¿Está seguro que desea limpiar?')) {
       localStorage.setItem("PlanillaUno", null);
       localStorage.setItem("TotalUno", null);
-
       this.objetoPlanilla = [];
-
       this.consecutivo_uno = null;
       this.fecha_uno = '';
       this.hora_uno = '';
       this.lugar_uno = '';
       this.temperatura_vehiculo_uno = '';
-
-
       this.conductor_uno = '';
       this.temperatura_uno = '';
       this.vehiculo_uno = '';
@@ -727,7 +748,6 @@ export class AppComponent {
       this.disabled_uno = false;
       this.rango_for_uno = false;
       this.total_uno = 0;
-
       this.observacions_uno = '';
     }
   }
@@ -737,27 +757,21 @@ export class AppComponent {
       localStorage.setItem("PlanillaDos", null);
       localStorage.setItem("TotalDos", null);
       this.objetoPlanillaDos = [];
-
       this.consecutivo_dos = null;
       this.fecha_dos = '';
       this.hora_dos = '';
       this.lugar_dos = '';
       this.temperatura_vehiculo_dos = '';
-
-
       this.conductor_dos = '';
       this.temperatura_dos = '';
       this.vehiculo_dos = '';
       this.cliente_dos = '';
       this.disabled_dos = false;
       this.rango_for_dos = false;
-
       this.total_dos = 0;
-
       this.observacions_dos = '';
     }
   }
-
   private conteoPDF(element: Pesos) {
     let cantidad: number = 0;
     let peso: number = 0;
@@ -765,30 +779,54 @@ export class AppComponent {
     let canastas: number = 0;
     let object: PesosSumas[] = [];
 
-    if (this.objetoPlanillaPDF.filter((other) => other.nivel === element.nivel).length > 0) {
-      object = this.objetoPlanillaPDF.filter((other) => other.nivel === element.nivel);
-      cantidad = object[0].cantidad;
-      peso = object[0].peso;
-      peso_promedio = object[0].peso_promedio;
-      canastas = object[0].canasta;
-      this.objetoPlanillaPDF.splice(this.objetoPlanillaPDF.findIndex(data => data.nivel === element.nivel), 1);
+    if (element.producto === 'POLLO EN CANAL') {
+      if (this.objetoPlanillaPDFPollo.filter((other) => other.nivel === element.nivel).length > 0) {
+        object = this.objetoPlanillaPDFPollo.filter((other) => other.nivel === element.nivel);
+        cantidad = object[0].cantidad;
+        peso = object[0].peso;
+        peso_promedio = object[0].peso_promedio;
+        canastas = object[0].canasta;
+        this.objetoPlanillaPDFPollo.splice(this.objetoPlanillaPDFPollo.findIndex(data => data.nivel === element.nivel), 1);
+      }
+
+      this.objetoPlanillaPDFPollo.push({
+        nivel: element.nivel,
+        producto: element.producto,
+        rango: element.rango,
+        cantidad: element.cantidad + cantidad,
+        peso: element.peso + peso,
+        peso_promedio: element.peso_promedio + peso_promedio,
+        canasta: element.canasta + canastas,
+      });
+
+      this.objetoPlanillaPDFPollo = this.objetoPlanillaPDFPollo.sort(function (a, b) {
+        return a.nivel - b.nivel;
+      });
+    } else {
+      if (this.objetoPlanillaPDFMenudencias.filter((other) => other.nivel === element.nivel).length > 0) {
+        object = this.objetoPlanillaPDFMenudencias.filter((other) => other.nivel === element.nivel);
+        cantidad = object[0].cantidad;
+        peso = object[0].peso;
+        peso_promedio = object[0].peso_promedio;
+        canastas = object[0].canasta;
+        this.objetoPlanillaPDFMenudencias.splice(this.objetoPlanillaPDFMenudencias.findIndex(data => data.nivel === element.nivel), 1);
+      }
+
+      this.objetoPlanillaPDFMenudencias.push({
+        nivel: element.nivel,
+        producto: element.producto,
+        rango: element.rango,
+        cantidad: element.cantidad + cantidad,
+        peso: element.peso + peso,
+        peso_promedio: element.peso_promedio + peso_promedio,
+        canasta: element.canasta + canastas,
+      });
+
+      this.objetoPlanillaPDFMenudencias = this.objetoPlanillaPDFMenudencias.sort(function (a, b) {
+        return a.nivel - b.nivel;
+      });
     }
-
-    this.objetoPlanillaPDF.push({
-      nivel: element.nivel,
-      producto: element.producto,
-      rango: element.rango,
-      cantidad: element.cantidad + cantidad,
-      peso: element.peso + peso,
-      peso_promedio: element.peso_promedio + peso_promedio,
-      canasta: element.canasta + canastas,
-    });
-
-    this.objetoPlanillaPDF = this.objetoPlanillaPDF.sort(function (a, b) {
-      return a.nivel - b.nivel;
-    });
   }
-
   private conteoDosPDF(element: Pesos) {
     let cantidad: number = 0;
     let peso: number = 0;
@@ -796,36 +834,81 @@ export class AppComponent {
     let canastas: number = 0;
     let object: PesosSumas[] = [];
 
-    if (this.objetoPlanillaDosPDF.filter((other) => other.nivel === element.nivel).length > 0) {
-      object = this.objetoPlanillaDosPDF.filter((other) => other.nivel === element.nivel);
-      cantidad = object[0].cantidad;
-      peso = object[0].peso;
-      peso_promedio = object[0].peso_promedio;
-      canastas = object[0].canasta;
-      this.objetoPlanillaDosPDF.splice(this.objetoPlanillaDosPDF.findIndex(data => data.nivel === element.nivel), 1);
+    if (element.producto === 'POLLO EN CANAL') {
+      if (this.objetoPlanillaPDFDosPollo.filter((other) => other.nivel === element.nivel).length > 0) {
+        object = this.objetoPlanillaPDFDosPollo.filter((other) => other.nivel === element.nivel);
+        cantidad = object[0].cantidad;
+        peso = object[0].peso;
+        peso_promedio = object[0].peso_promedio;
+        canastas = object[0].canasta;
+        this.objetoPlanillaPDFDosPollo.splice(this.objetoPlanillaPDFDosPollo.findIndex(data => data.nivel === element.nivel), 1);
+      }
+
+      this.objetoPlanillaPDFDosPollo.push({
+        nivel: element.nivel,
+        producto: element.producto,
+        rango: element.rango,
+        cantidad: element.cantidad + cantidad,
+        peso: element.peso + peso,
+        peso_promedio: element.peso_promedio + peso_promedio,
+        canasta: element.canasta + canastas,
+      });
+
+      this.objetoPlanillaPDFDosPollo = this.objetoPlanillaPDFDosPollo.sort(function (a, b) {
+        return a.nivel - b.nivel;
+      });
+    } else {
+      if (this.objetoPlanillaPDFDosMenudencias.filter((other) => other.nivel === element.nivel).length > 0) {
+        object = this.objetoPlanillaPDFDosMenudencias.filter((other) => other.nivel === element.nivel);
+        cantidad = object[0].cantidad;
+        peso = object[0].peso;
+        peso_promedio = object[0].peso_promedio;
+        canastas = object[0].canasta;
+        this.objetoPlanillaPDFDosMenudencias.splice(this.objetoPlanillaPDFDosMenudencias.findIndex(data => data.nivel === element.nivel), 1);
+      }
+
+      this.objetoPlanillaPDFDosMenudencias.push({
+        nivel: element.nivel,
+        producto: element.producto,
+        rango: element.rango,
+        cantidad: element.cantidad + cantidad,
+        peso: element.peso + peso,
+        peso_promedio: element.peso_promedio + peso_promedio,
+        canasta: element.canasta + canastas,
+      });
+
+      this.objetoPlanillaPDFDosMenudencias = this.objetoPlanillaPDFDosMenudencias.sort(function (a, b) {
+        return a.nivel - b.nivel;
+      });
     }
-
-    this.objetoPlanillaDosPDF.push({
-      nivel: element.nivel,
-      producto: element.producto,
-      rango: element.rango,
-      cantidad: element.cantidad + cantidad,
-      peso: element.peso + peso,
-      peso_promedio: element.peso_promedio + peso_promedio,
-      canasta: element.canasta + canastas,
-    });
-
-    this.objetoPlanillaDosPDF = this.objetoPlanillaDosPDF.sort(function (a, b) {
-      return a.nivel - b.nivel;
-    });
   }
-
   @ViewChild('pdf') el: ElementRef;
 
   pdfUno(): void {
     let iteracion = this.objetoPlanilla[0].pesos;
 
     iteracion.forEach(element => {
+
+      if (element.producto === 'POLLO EN CANAL') {
+        this.totCantUnoPollo = element.cantidad + this.totCantUnoPollo;
+        this.totPesoUnoPollo = element.peso + this.totPesoUnoPollo;
+        this.totPesoPromedioUnoPollo = this.totPesoUnoPollo / this.totCantUnoPollo;
+        this.totCanastasUnoPollo = element.canasta + this.totCanastasUnoPollo;
+      }
+
+      this.totPesoUnoPolloMenudencias = element.peso + this.totPesoUnoPolloMenudencias;
+      this.totCanastasUnoPolloMenudencias = element.canasta + this.totCanastasUnoPolloMenudencias;
+
+      this.totalesUno = [];
+      this.totalesUno.push({
+        cantidad_pollo: this.totCantUnoPollo,
+        peso_pollo: this.totPesoUnoPollo,
+        peso_promedio_pollo: this.totPesoPromedioUnoPollo,
+        canastas_pollo: this.totCanastasUnoPollo,
+        peso_pollo_menudencias: this.totPesoUnoPolloMenudencias,
+        canastas_pollo_menudencias: this.totCanastasUnoPolloMenudencias
+      });
+
       switch (element.nivel) {
         case 1: {
           this.conteoPDF(element);
@@ -967,31 +1050,48 @@ export class AppComponent {
     });
 
     this.print = true;
-
-
-    // let pdf = new jsPDF('v', 'pt', 'A4');
-    // let options = {
-    //   pagesplit: true
-    // };
     setTimeout(() => {
-      // pdf.addHTML(this.el.nativeElement, 50, 50, options, () => {
-      //   pdf.save(this.cliente_uno + Date.now() + ".pdf");       
-      //window.print();
       let html = "<html><body><table style='border-collapse: collapse;'>" + document.getElementById('divPrintPDFOne').innerHTML + "</table></body></html>"
       cordova.plugins.printer.print(html, { duplex: 'long' }, function (res) {
       });
-      // });
     }, 500);
 
     setTimeout(() => {
       this.print = false;
-    }, 1000);
+      this.totCantUnoPollo = 0;
+      this.totPesoUnoPollo = 0;
+      this.totPesoPromedioUnoPollo = 0;
+      this.totCanastasUnoPollo = 0;
+      this.totPesoUnoPolloMenudencias = 0;
+      this.totCanastasUnoPolloMenudencias = 0;
+      this.totPesoUnoPolloMenudencias = 0;
+      this.totCanastasUnoPolloMenudencias = 0;
+    }, 700);
   }
-
   pdfDos(): void {
     let iteracion = this.objetoPlanillaDos[0].pesos;
 
     iteracion.forEach(element => {
+      if (element.producto === 'POLLO EN CANAL') {
+        this.totCantDosPollo = element.cantidad + this.totCantDosPollo;
+        this.totPesoDosPollo = element.peso + this.totPesoDosPollo;
+        this.totPesoPromedioDosPollo = this.totPesoDosPollo / this.totCantDosPollo;
+        this.totCanastasDosPollo = element.canasta + this.totCanastasDosPollo;
+      }
+
+      this.totPesoDosPolloMenudencias = element.peso + this.totPesoDosPolloMenudencias;
+      this.totCanastasDosPolloMenudencias = element.canasta + this.totCanastasDosPolloMenudencias;
+
+      this.totalesDos = [];
+      this.totalesDos.push({
+        cantidad_pollo: this.totCantDosPollo,
+        peso_pollo: this.totPesoDosPollo,
+        peso_promedio_pollo: this.totPesoPromedioDosPollo,
+        canastas_pollo: this.totCanastasDosPollo,
+        peso_pollo_menudencias: this.totPesoDosPolloMenudencias,
+        canastas_pollo_menudencias: this.totCanastasDosPolloMenudencias
+      });
+
       switch (element.nivel) {
         case 1: {
           this.conteoDosPDF(element);
@@ -1078,55 +1178,55 @@ export class AppComponent {
           break;
         }
         case 21: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 22: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 23: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 24: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 25: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 26: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 27: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 28: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 29: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 30: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 31: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 32: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
         case 33: {
-          this.conteoPDF(element);
+          this.conteoDosPDF(element);
           break;
         }
 
@@ -1137,25 +1237,24 @@ export class AppComponent {
     });
 
     this.print = true;
-    // let pdf = new jsPDF('v', 'pt', 'A4');
-    // let options = {
-    //   pagesplit: true
-    // };
     setTimeout(() => {
-      // pdf.addHTML(this.el.nativeElement, 50, 50, options, () => {
-      //   pdf.save(this.cliente_uno + Date.now() + ".pdf");       
-      //window.print();
       let html = "<html><body><table style='border-collapse: collapse;'>" + document.getElementById('divPrintPDFTwo').innerHTML.toString() + "</table></body></html>"
       cordova.plugins.printer.print(html, { duplex: 'long' }, function (res) {
       });
-      // });
     }, 500);
 
     setTimeout(() => {
       this.print = false;
-    }, 1000);
+      this.totCantDosPollo = 0;
+      this.totPesoDosPollo = 0;
+      this.totPesoPromedioDosPollo = 0;
+      this.totCanastasDosPollo = 0;
+      this.totPesoDosPolloMenudencias = 0;
+      this.totCanastasDosPolloMenudencias = 0;
+      this.totPesoDosPolloMenudencias = 0;
+      this.totCanastasDosPolloMenudencias = 0;
+    }, 700);
   }
-
   observacionesUno() {
     if (this.observacions_uno != "") {
       this.objetoPlanilla[0].observaciones = this.observacions_uno;
@@ -1163,7 +1262,6 @@ export class AppComponent {
       localStorage.setItem("PlanillaUno", JSON.stringify(this.objetoPlanilla));
     }
   }
-
   observacionesDos() {
     if (this.observacions_dos != "") {
       this.objetoPlanillaDos[0].observaciones = this.observacions_dos;
@@ -1171,5 +1269,4 @@ export class AppComponent {
       localStorage.setItem("PlanillaUDos", JSON.stringify(this.objetoPlanillaDos));
     }
   }
-
 }

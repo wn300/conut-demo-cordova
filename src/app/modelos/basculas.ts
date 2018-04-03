@@ -32,3 +32,12 @@ export interface PesosSumas {
     peso_promedio: number,
     canasta: number,  
 }
+
+export interface Totales {
+    cantidad_pollo: number,
+    peso_pollo: number,
+    peso_promedio_pollo: number,
+    canastas_pollo: number,
+    peso_pollo_menudencias: number,
+    canastas_pollo_menudencias: number,
+}

@@ -10,7 +10,7 @@
     <feature name="Printer">
         <param name="android-package" value="de.appplant.cordova.plugin.printer.Printer" />
     </feature>
-    <name>HelloCordova</name>
+    <name>Avima-Contador</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>
