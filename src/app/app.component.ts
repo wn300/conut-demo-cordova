@@ -1066,6 +1066,9 @@ export class AppComponent {
       this.totCanastasUnoPolloMenudencias = 0;
       this.totPesoUnoPolloMenudencias = 0;
       this.totCanastasUnoPolloMenudencias = 0;
+
+      this.objetoPlanillaPDFPollo = [];
+      this.objetoPlanillaPDFMenudencias = [];
     }, 700);
   }
   pdfDos(): void {
@@ -1253,6 +1256,9 @@ export class AppComponent {
       this.totCanastasDosPolloMenudencias = 0;
       this.totPesoDosPolloMenudencias = 0;
       this.totCanastasDosPolloMenudencias = 0;
+
+      this.objetoPlanillaPDFDosPollo = [];
+      this.objetoPlanillaPDFDosMenudencias = [];
     }, 700);
   }
   observacionesUno() {
