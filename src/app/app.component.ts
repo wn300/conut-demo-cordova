@@ -453,7 +453,7 @@ export class AppComponent {
       }
 
       this.cantidad_uno = (this.canasta_uno * tamaño) - this.negativo_uno;
-      this.peso_promedio_uno = this.cantidad_uno / this.peso_uno;
+      this.peso_promedio_uno =  this.peso_uno / this.cantidad_uno;
 
       let ids: Array<number> = [];
       this.objetoPlanilla[0].pesos.forEach((element) => {
@@ -667,7 +667,7 @@ export class AppComponent {
       }
 
       this.cantidad_dos = (this.canasta_dos * tamaño) - this.negativo_dos;
-      this.peso_promedio_dos = this.cantidad_dos / this.peso_dos;
+      this.peso_promedio_dos = this.peso_dos / this.cantidad_dos;
 
       let ids: Array<number> = [];
       this.objetoPlanillaDos[0].pesos.forEach((element) => {
