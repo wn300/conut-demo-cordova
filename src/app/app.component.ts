@@ -453,13 +453,19 @@ export class AppComponent {
       }
 
       this.cantidad_uno = (this.canasta_uno * tamaño) - this.negativo_uno;
-      this.peso_promedio_uno =  this.peso_uno / this.cantidad_uno;
+      this.peso_promedio_uno = this.peso_uno / this.cantidad_uno;
 
       let ids: Array<number> = [];
+
       this.objetoPlanilla[0].pesos.forEach((element) => {
         ids.push(element.id)
       })
-      this.id_uno = Math.max.apply(null,ids)
+
+      if(ids.length > 0){
+        this.id_uno = Math.max.apply(null, ids);
+      }else{
+        this.id_uno = 1
+      }
 
       this.objetoPlanilla[0].pesos.push({
         id: this.id_uno + 1,
@@ -673,7 +679,12 @@ export class AppComponent {
       this.objetoPlanillaDos[0].pesos.forEach((element) => {
         ids.push(element.id)
       })
-      this.id_dos = Math.max.apply(null,ids)
+
+      if(ids.length > 0){
+        this.id_dos = Math.max.apply(null, ids)
+      }else{
+        this.id_dos = 1
+      }      
 
       this.objetoPlanillaDos[0].pesos.push({
         id: this.id_dos + 1,
