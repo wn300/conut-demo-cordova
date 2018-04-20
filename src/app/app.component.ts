@@ -794,7 +794,7 @@ export class AppComponent {
       if (this.objetoPlanillaPDFPollo.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFPollo.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = object[0].peso;
+        peso = (object[0].canasta * -2) + object[0].peso;
         peso_promedio = object[0].peso_promedio;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFPollo.splice(this.objetoPlanillaPDFPollo.findIndex(data => data.nivel === element.nivel), 1);
@@ -817,7 +817,7 @@ export class AppComponent {
       if (this.objetoPlanillaPDFMenudencias.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFMenudencias.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = object[0].peso;
+        peso = (object[0].canasta * -2) + object[0].peso;
         peso_promedio = object[0].peso_promedio;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFMenudencias.splice(this.objetoPlanillaPDFMenudencias.findIndex(data => data.nivel === element.nivel), 1);
@@ -849,7 +849,7 @@ export class AppComponent {
       if (this.objetoPlanillaPDFDosPollo.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFDosPollo.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = object[0].peso;
+        peso = (object[0].canasta * -2) + object[0].peso;
         peso_promedio = object[0].peso_promedio;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFDosPollo.splice(this.objetoPlanillaPDFDosPollo.findIndex(data => data.nivel === element.nivel), 1);
@@ -872,7 +872,7 @@ export class AppComponent {
       if (this.objetoPlanillaPDFDosMenudencias.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFDosMenudencias.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = object[0].peso;
+        peso = (object[0].canasta * -2) + object[0].peso;
         peso_promedio = object[0].peso_promedio;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFDosMenudencias.splice(this.objetoPlanillaPDFDosMenudencias.findIndex(data => data.nivel === element.nivel), 1);
@@ -902,12 +902,12 @@ export class AppComponent {
 
       if (element.producto === 'POLLO EN CANAL') {
         this.totCantUnoPollo = element.cantidad + this.totCantUnoPollo;
-        this.totPesoUnoPollo = element.peso + this.totPesoUnoPollo;
+        this.totPesoUnoPollo = (element.canasta * -2) + element.peso + this.totPesoUnoPollo;
         this.totPesoPromedioUnoPollo = this.totPesoUnoPollo / this.totCantUnoPollo;
         this.totCanastasUnoPollo = element.canasta + this.totCanastasUnoPollo;
       }
 
-      this.totPesoUnoPolloMenudencias = element.peso + this.totPesoUnoPolloMenudencias;
+      this.totPesoUnoPolloMenudencias = (element.canasta * -2) + element.peso + this.totPesoUnoPolloMenudencias;
       this.totCanastasUnoPolloMenudencias = element.canasta + this.totCanastasUnoPolloMenudencias;
 
       this.totalesUno = [];
@@ -1088,12 +1088,12 @@ export class AppComponent {
     iteracion.forEach(element => {
       if (element.producto === 'POLLO EN CANAL') {
         this.totCantDosPollo = element.cantidad + this.totCantDosPollo;
-        this.totPesoDosPollo = element.peso + this.totPesoDosPollo;
+        this.totPesoDosPollo = (element.canasta * -2) + element.peso + this.totPesoDosPollo;
         this.totPesoPromedioDosPollo = this.totPesoDosPollo / this.totCantDosPollo;
         this.totCanastasDosPollo = element.canasta + this.totCanastasDosPollo;
       }
 
-      this.totPesoDosPolloMenudencias = element.peso + this.totPesoDosPolloMenudencias;
+      this.totPesoDosPolloMenudencias = (element.canasta * -2) + element.peso + this.totPesoDosPolloMenudencias;
       this.totCanastasDosPolloMenudencias = element.canasta + this.totCanastasDosPolloMenudencias;
 
       this.totalesDos = [];
