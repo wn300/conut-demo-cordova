@@ -461,9 +461,9 @@ export class AppComponent {
         ids.push(element.id)
       })
 
-      if(ids.length > 0){
+      if (ids.length > 0) {
         this.id_uno = Math.max.apply(null, ids);
-      }else{
+      } else {
         this.id_uno = 1
       }
 
@@ -680,11 +680,11 @@ export class AppComponent {
         ids.push(element.id)
       })
 
-      if(ids.length > 0){
+      if (ids.length > 0) {
         this.id_dos = Math.max.apply(null, ids)
-      }else{
+      } else {
         this.id_dos = 1
-      }      
+      }
 
       this.objetoPlanillaDos[0].pesos.push({
         id: this.id_dos + 1,
@@ -786,6 +786,7 @@ export class AppComponent {
   private conteoPDF(element: Pesos) {
     let cantidad: number = 0;
     let peso: number = 0;
+    let pesoCanastas: number = 0;
     let peso_promedio: number = 0;
     let canastas: number = 0;
     let object: PesosSumas[] = [];
@@ -794,10 +795,13 @@ export class AppComponent {
       if (this.objetoPlanillaPDFPollo.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFPollo.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = (object[0].canasta * -2) + object[0].peso;
-        peso_promedio = object[0].peso_promedio;
+        peso = object[0].peso;
+        peso_promedio = peso / cantidad;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFPollo.splice(this.objetoPlanillaPDFPollo.findIndex(data => data.nivel === element.nivel), 1);
+        pesoCanastas = ((element.canasta) * (-2)) + element.peso
+      } else {
+        pesoCanastas = ((element.canasta + canastas) * (-2)) + element.peso
       }
 
       this.objetoPlanillaPDFPollo.push({
@@ -805,8 +809,8 @@ export class AppComponent {
         producto: element.producto,
         rango: element.rango,
         cantidad: element.cantidad + cantidad,
-        peso: element.peso + peso,
-        peso_promedio: element.peso_promedio + peso_promedio,
+        peso: pesoCanastas + peso,
+        peso_promedio: (element.peso + peso) / (element.cantidad + cantidad),
         canasta: element.canasta + canastas,
       });
 
@@ -817,10 +821,13 @@ export class AppComponent {
       if (this.objetoPlanillaPDFMenudencias.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFMenudencias.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = (object[0].canasta * -2) + object[0].peso;
-        peso_promedio = object[0].peso_promedio;
+        peso = object[0].peso;
+        peso_promedio = peso / cantidad;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFMenudencias.splice(this.objetoPlanillaPDFMenudencias.findIndex(data => data.nivel === element.nivel), 1);
+        pesoCanastas = ((element.canasta) * (-2)) + element.peso
+      } else {
+        pesoCanastas = ((element.canasta + canastas) * (-2)) + element.peso
       }
 
       this.objetoPlanillaPDFMenudencias.push({
@@ -828,8 +835,8 @@ export class AppComponent {
         producto: element.producto,
         rango: element.rango,
         cantidad: element.cantidad + cantidad,
-        peso: element.peso + peso,
-        peso_promedio: element.peso_promedio + peso_promedio,
+        peso: pesoCanastas + peso,
+        peso_promedio: (element.peso + peso) / (element.cantidad + cantidad),
         canasta: element.canasta + canastas,
       });
 
@@ -838,9 +845,10 @@ export class AppComponent {
       });
     }
   }
-  private conteoDosPDF(element: Pesos) {
+  private conteoDosPDF(element: Pesos) {  
     let cantidad: number = 0;
     let peso: number = 0;
+    let pesoCanastas: number = 0;
     let peso_promedio: number = 0;
     let canastas: number = 0;
     let object: PesosSumas[] = [];
@@ -849,10 +857,13 @@ export class AppComponent {
       if (this.objetoPlanillaPDFDosPollo.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFDosPollo.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = (object[0].canasta * -2) + object[0].peso;
-        peso_promedio = object[0].peso_promedio;
+        peso = object[0].peso;
+        peso_promedio = peso / cantidad;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFDosPollo.splice(this.objetoPlanillaPDFDosPollo.findIndex(data => data.nivel === element.nivel), 1);
+        pesoCanastas = ((element.canasta) * (-2)) + element.peso
+      } else {
+        pesoCanastas = ((element.canasta + canastas) * (-2)) + element.peso
       }
 
       this.objetoPlanillaPDFDosPollo.push({
@@ -860,8 +871,8 @@ export class AppComponent {
         producto: element.producto,
         rango: element.rango,
         cantidad: element.cantidad + cantidad,
-        peso: element.peso + peso,
-        peso_promedio: element.peso_promedio + peso_promedio,
+        peso: pesoCanastas + peso,
+        peso_promedio: (element.peso + peso) / (element.cantidad + cantidad),
         canasta: element.canasta + canastas,
       });
 
@@ -872,10 +883,13 @@ export class AppComponent {
       if (this.objetoPlanillaPDFDosMenudencias.filter((other) => other.nivel === element.nivel).length > 0) {
         object = this.objetoPlanillaPDFDosMenudencias.filter((other) => other.nivel === element.nivel);
         cantidad = object[0].cantidad;
-        peso = (object[0].canasta * -2) + object[0].peso;
-        peso_promedio = object[0].peso_promedio;
+        peso = object[0].peso;
+        peso_promedio = peso / cantidad;
         canastas = object[0].canasta;
         this.objetoPlanillaPDFDosMenudencias.splice(this.objetoPlanillaPDFDosMenudencias.findIndex(data => data.nivel === element.nivel), 1);
+        pesoCanastas = ((element.canasta) * (-2)) + element.peso
+      } else {
+        pesoCanastas = ((element.canasta + canastas) * (-2)) + element.peso
       }
 
       this.objetoPlanillaPDFDosMenudencias.push({
@@ -883,8 +897,8 @@ export class AppComponent {
         producto: element.producto,
         rango: element.rango,
         cantidad: element.cantidad + cantidad,
-        peso: element.peso + peso,
-        peso_promedio: element.peso_promedio + peso_promedio,
+        peso: pesoCanastas + peso,
+        peso_promedio: (element.peso + peso) / (element.cantidad + cantidad),
         canasta: element.canasta + canastas,
       });
 
