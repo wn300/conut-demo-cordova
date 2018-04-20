@@ -1,4 +1,4 @@
-#Wed Apr 04 07:50:29 COT 2018
-base.0=D\:\\wilmer\\cordova\\avima-count\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+#Thu Apr 19 21:19:57 COT 2018
+base.0=D\:\\WILMER\\1-OLAM\\2-PROYECTOS CLIENTES\\1-AVIMA\\1-PRODUCTOS\\apk-contador-planilla\\avima-count\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 renamed.0=classes.dex
-file.0=D\:\\wilmer\\cordova\\avima-count\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0\\classes.dex
+file.0=D\:\\WILMER\\1-OLAM\\2-PROYECTOS CLIENTES\\1-AVIMA\\1-PRODUCTOS\\apk-contador-planilla\\avima-count\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0\\classes.dex
